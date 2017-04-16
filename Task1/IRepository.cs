@@ -11,16 +11,19 @@ namespace Task1
     /// </summary>
     public interface IRepository
     {
+
         /// <summary>
         /// Save information to file
         /// </summary>
         /// <param name="path">The whole path to file with name</param>
-        void Save(string path);
+        /// <param name="listBooks">List of books</param>
+        void Write(string path, List<Book> listBooks);
 
         /// <summary>
         /// Load information from file
         /// </summary>
         /// <param name="path">The whole path to file with name</param>
-        void Load(string path);
+        /// <returns>List of books</returns>
+        IEnumerable<Book> Read(string path);
     }
 }

@@ -9,10 +9,16 @@ namespace Task1Criterions
 {
     public class FindBookByAuther:IFind
     {
-        bool IFind.Find(object obj, Book book)
+        private string auther;
+
+        public FindBookByAuther(string auther)
         {
-            string str = (string)obj;
-            if (str == book.Auther)
+            this.auther = auther;
+        }
+
+        bool IFind.Find(Book book)
+        {
+            if (auther == book.Auther)
                 return true;
             else return false;
         }

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Task1;
 using Task1Criterions;
+using NLog;
 
 namespace Task1CUI
 {
@@ -13,33 +14,34 @@ namespace Task1CUI
     {
         static void Main(string[] args)
         {
-            BookListService bls = new BookListService();
 
-            bls.ListBooks.Add(new Book("Pygmi", "Palanik", 1996, 200, "Doubleday"));
-            bls.ListBooks.Add(new Book("It", "King", 1990, 400, "Viking Press"));
-            bls.ListBooks.Add(new Book("1984", "Orwell", 1999, 200, "Harvill Secker"));
-            bls.ListBooks.Add(new Book("Green Mile", "King", 1999, 500, "Viking Press"));
+            List<Book> listBooks = new List<Book>();
+            listBooks.Add(new Book("Pygmi", "Palanik", 1996, 200, "Doubleday"));
+            listBooks.Add(new Book("It", "King", 1990, 400, "Viking Press"));
+            listBooks.Add(new Book("1984", "Orwell", 1999, 200, "Harvill Secker"));
+            listBooks.Add(new Book("Green Mile", "King", 1999, 500, "Viking Press"));
+
+            Task1.ILogger logger = new NlogAdapter(LogManager.GetCurrentClassLogger());
+            BookListService bls = new BookListService(listBooks, logger);
 
             Console.WriteLine("*****SAVE*****");
-            IRepository repos = new IRepositoryAdapterTxt(bls);
-            repos.Save(Environment.CurrentDirectory + "BookListStorage.txt");
+            IRepository repos = new RepositoryAdapterTxt();
+            bls.Upload(repos, Environment.CurrentDirectory + "BookListStorage.txt");
 
             Console.WriteLine("*****SORT BY NAME*****");
             bls.SortBooksByTag(new SortByNameOfBook());
-            foreach (var item in bls.ListBooks)
+            foreach (var item in listBooks)
                 Console.WriteLine(item.ToString());
 
             Console.WriteLine("*****FIND BY PRICE*****");
-            List<Book> f = bls.FindBookByTag(200m, new FindBookByPrice());
+            List<Book> f = bls.FindBookByTag(new FindBookByPrice(200));
             foreach (var item in f)
                 Console.WriteLine(item.ToString());
 
             Console.WriteLine("*****OPEN*****");
-            BookListService bls1 = new BookListService();
-            repos = new IRepositoryAdapterTxt(bls1);
-            repos.Load(Environment.CurrentDirectory + "BookListStorage.txt");
-
-            foreach (var item in bls1.ListBooks)
+            IEnumerable<Book> listBooksDL = bls.Download(repos, Environment.CurrentDirectory + "BookListStorage.txt");
+            
+            foreach (var item in listBooksDL)
                 Console.WriteLine(item.ToString());
         }
     }

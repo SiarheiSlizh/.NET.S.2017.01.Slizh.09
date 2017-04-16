@@ -15,49 +15,67 @@ namespace Task1
     public class BookListService
     {
         #region private fields
+
         /// <summary>
         /// List of books
         /// </summary>
-        private List<Book> listBooks = new List<Book>();
+        private List<Book> listBooks;
 
         /// <summary>
         /// Logger provides the posibility to collect the important information for developer.
         /// </summary>
-        private Logger log = LogManager.GetCurrentClassLogger();
+        private ILogger log;
+
         #endregion
 
-        #region Property
+
+        #region Construtor
+        
         /// <summary>
-        /// Allows to work with list of books
+        /// 
         /// </summary>
-        public List<Book> ListBooks
+        /// <param name="list"></param>
+        /// <param name="log"></param>
+        public BookListService(List<Book> list, ILogger log)
         {
-            get { return listBooks; }
-            private set { listBooks = value; }
+            if (ReferenceEquals(list, null))
+                listBooks = new List<Book>();
+            else
+                listBooks = list;
+
+            if (ReferenceEquals(log, null))
+                throw new ArgumentNullException(nameof(log));
+
+            this.log = log;
+            log.Info("Log file is created");
         }
+
         #endregion
+
 
         #region public methods
+
         /// <summary>
         /// Add the book into list 
         /// </summary>
         /// <param name="book">book for adding</param>
         public void AddBook(Book book)
         {
-            log.Info("Try to add book into list");
+            log.Debug("Try to add book into list");
             if (ReferenceEquals(book, null))
             {
-                log.Error("Argument book contains null");
+                log.Trace("Argument book contains null");
                 throw new ArgumentNullException(nameof(book));
             }
 
             foreach (var item in listBooks)
                 if (book.Equals(item))
                 {
-                    log.Error("Book has already added");
+                    log.Trace("Book has already added");
                     throw new ArgumentException("Book has already added");
                 }
             listBooks.Add(book);
+            log.Debug("The book is added");
         }
 
         /// <summary>
@@ -66,10 +84,10 @@ namespace Task1
         /// <param name="book">book for removing</param>
         public void RemoveBook(Book book)
         {
-            log.Info("Try to remove book");
+            log.Debug("Try to remove book");
             if (ReferenceEquals(book, null))
             {
-                log.Error("Argument book contains null");
+                log.Trace("Argument book contains null");
                 throw new ArgumentNullException(nameof(book));
             }
 
@@ -78,11 +96,11 @@ namespace Task1
                 if (book.Equals(item))
                 {
                     listBooks.Remove(item);
-                    log.Info("The book was removed");
+                    log.Debug("The book was removed");
                     return;
                 }
             }
-            log.Error("The book was not found");
+            log.Trace("The book was not found");
             throw new ArgumentException();
         }
 
@@ -92,19 +110,19 @@ namespace Task1
         /// <param name="obj">search this object in list</param>
         /// <param name="criterion">criterion which is used to define the way of finding</param>
         /// <returns></returns>
-        public List<Book> FindBookByTag(object obj, IFind criterion)
+        public List<Book> FindBookByTag(IFind criterion)
         {
-            log.Info("Try to find book by tag");
+            log.Debug("Try to find book by tag");
             List<Book> findList = new List<Book>();
-            findList = listBooks.FindAll(book => criterion.Find(obj, book));
+            findList = listBooks.FindAll(book => criterion.Find(book));
 
             if (findList.Count == 0)
             {
-                log.Error("The book was not found");
+                log.Trace("The book was not found");
                 throw new ArgumentException();
             }
             else {
-                log.Info("The book was found by tag");
+                log.Debug("The book was found by tag");
                 return findList;
             }
         }
@@ -115,8 +133,67 @@ namespace Task1
         /// <param name="criterion">criterion which is used to define the way of sorting</param>
         public void SortBooksByTag(IComparer<Book> criterion)
         {
+            log.Debug("Try to sort list");
+            if (ReferenceEquals(criterion, null))
+            {
+                log.Trace("error with Comparer");
+                throw new ArgumentNullException();
+            }
+
             listBooks.Sort(criterion);
+            log.Debug($"list is {criterion}");
         }
+
+        /// <summary>
+        /// upload books into storage
+        /// </summary>
+        /// <param name="storage">type of storage</param>
+        /// <param name="path">path to repository</param>
+        public void Upload(IRepository storage, string path)
+        {
+            log.Debug("Try to upload books");
+            if (ReferenceEquals(storage, null))
+            {
+                log.Trace("storage is not found");
+                throw new ArgumentNullException(nameof(storage));
+            }
+
+            if (string.IsNullOrEmpty(path))
+            {
+                log.Trace("storage is not found");
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            storage.Write(path, listBooks);
+            log.Debug($"Books are uploaded into storage {path}");
+        }
+
+        /// <summary>
+        /// download books from storage
+        /// </summary>
+        /// <param name="storage">type of storage</param>
+        /// <param name="path">path to repository</param>
+        /// <returns>list of books</returns>
+        public IEnumerable<Book> Download(IRepository storage, string path)
+        {
+            log.Debug("Try to download books");
+            if (ReferenceEquals(storage, null))
+            {
+                log.Trace("storage is not found");
+                throw new ArgumentNullException(nameof(storage));
+            }
+
+            if (string.IsNullOrEmpty(path))
+            {
+                log.Trace("storage is not found");
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            IEnumerable<Book> list = storage.Read(path);
+            log.Debug($"Books are downloaded from storage {path}");
+            return list;
+        }
+
         #endregion
     }
 }

@@ -9,9 +9,15 @@ namespace Task1Criterions
 {
     public class FindBookByPrice : IFind
     {
-        bool IFind.Find(object obj, Book book)
+        private decimal price;
+
+        public FindBookByPrice(decimal price)
         {
-            decimal price = (decimal)obj;
+            this.price = price;
+        }
+
+        bool IFind.Find(Book book)
+        {
             if (price == book.Price)
                 return true;
             else return false;

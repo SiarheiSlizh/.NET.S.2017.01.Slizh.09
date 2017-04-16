@@ -14,9 +14,8 @@ namespace Task1
         /// <summary>
         /// Method defines the criterion
         /// </summary>
-        /// <param name="obj">one of arguments</param>
         /// <param name="book">book</param>
-        /// <returns></returns>
-        bool Find(object obj, Book book);
+        /// <returns>true in case finding the book else false</returns>
+        bool Find(Book book);
     }
 }

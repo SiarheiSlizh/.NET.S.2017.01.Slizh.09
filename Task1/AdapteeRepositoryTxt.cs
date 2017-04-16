@@ -13,24 +13,28 @@ namespace Task1
     public class AdapteeRepositoryTxt
     {
         #region public methods
+        
         /// <summary>
         /// Save books to binary file.
         /// </summary>
         /// <param name="path">The whole path to file with name.</param>
         /// <param name="service">Container for books.</param>
-        public void SaveToFile(string path, BookListService service)
+        public void SaveToFile(string path, List<Book> listBooks)
         {
-            if (ReferenceEquals(service, null))
-                throw new ArgumentNullException(nameof(service));
+            if (ReferenceEquals(listBooks, null))
+                throw new ArgumentNullException(nameof(listBooks));
 
-            if (service.ListBooks.Count == 0)
+            if (!path.EndsWith(".txt"))
+                throw new FormatException(nameof(path));
+
+            if (listBooks.Count == 0)
                 return;
 
             try {
                 using (BinaryWriter file = new BinaryWriter(
                     File.Open(path, FileMode.OpenOrCreate, FileAccess.Write), Encoding.UTF8))
                 {
-                    foreach (var item in service.ListBooks)
+                    foreach (var item in listBooks)
                     {
                         file.Write(item.Name);
                         file.Write(item.Auther);
@@ -57,10 +61,12 @@ namespace Task1
         /// </summary>
         /// <param name="path">The whole path to file with name.</param>
         /// <param name="service">Container for books.</param>
-        public void LoadFromFile(string path, BookListService service)
+        public IEnumerable<Book> LoadFromFile(string path)
         {
-            if (ReferenceEquals(service, null))
-                throw new ArgumentNullException(nameof(service));
+            List<Book> listBooks = new List<Book>();
+
+            if (!path.EndsWith(".txt"))
+                throw new FormatException(nameof(path));
 
             try
             {
@@ -74,7 +80,7 @@ namespace Task1
                         int year = file.ReadInt32();
                         decimal price = file.ReadDecimal();
                         string publisher = file.ReadString();
-                        service.AddBook(new Book(name, auther, year, price, publisher));
+                        listBooks.Add(new Book(name, auther, year, price, publisher));
                     }
                 }
             }
@@ -88,7 +94,9 @@ namespace Task1
             {
                 throw new IOException("File error", ex);
             }
+            return listBooks;
         }
+
         #endregion
     }
 }

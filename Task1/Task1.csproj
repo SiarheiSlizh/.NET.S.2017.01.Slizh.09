@@ -48,8 +48,10 @@
     <Compile Include="Book.cs" />
     <Compile Include="BookListService.cs" />
     <Compile Include="IFind.cs" />
+    <Compile Include="ILogger.cs" />
     <Compile Include="IRepository.cs" />
-    <Compile Include="IRepositoryAdapterTxt.cs" />
+    <Compile Include="NlogAdapter.cs" />
+    <Compile Include="RepositoryAdapterTxt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

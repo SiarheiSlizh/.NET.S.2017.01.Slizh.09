@@ -10,23 +10,23 @@ namespace Task1
     /// <summary>
     /// Contains information about books.
     /// </summary>
-    public class Book:IComparable, IFormattable
+    public class Book:IComparable, IComparable<Book>, IEquatable<Book>, IFormattable
     {
         #region Properties
         /// <summary>
         /// Name of book.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Author of book.
         /// </summary>
-        public string Auther { get; private set; }
+        public string Auther { get; }
 
         /// <summary>
         /// The year of publishing of book.
         /// </summary>
-        public int Year { get; private set; }
+        public int Year { get; }
 
         /// <summary>
         /// The price of book.
@@ -36,7 +36,7 @@ namespace Task1
         /// <summary>
         /// The publisher of book.
         /// </summary>
-        public string Publisher { get; private set; }
+        public string Publisher { get; }
         #endregion
 
         #region Constructor
@@ -120,7 +120,7 @@ namespace Task1
         /// </summary>
         /// <param name="other">other book</param>
         /// <returns>true in case of equality else false</returns>
-        public bool Equals (Book other)
+        bool IEquatable<Book>.Equals (Book other)
         {
             if (ReferenceEquals(other, null))
                 return false;
@@ -148,7 +148,6 @@ namespace Task1
             int hash = Name.GetHashCode();
             hash += Auther.GetHashCode();
             hash += Year.GetHashCode();
-            hash += Price.GetHashCode();
             hash += Publisher.GetHashCode();
             return hash;
         }
@@ -162,10 +161,10 @@ namespace Task1
         /// <returns></returns>
         int IComparable.CompareTo(object obj)
         {
-            if (ReferenceEquals(obj, null))
+            if (ReferenceEquals(obj, null) || !(obj is IComparable<Book>))
                 throw new ArgumentNullException(nameof(obj));
 
-            return this.CommpareTo((Book)obj); 
+            return ((IComparable<Book>)this).CompareTo((Book)obj);
         }
 
         /// <summary>
@@ -173,12 +172,12 @@ namespace Task1
         /// </summary>
         /// <param name="book">other book</param>
         /// <returns></returns>
-        public int CommpareTo(Book book)
+        int IComparable<Book>.CompareTo(Book other)
         {
-            if (this.Equals(book))
+            if (this.Equals(other))
                 return 0;
 
-            if (string.Compare(this.Name, book.Name) >= 0)
+            if (string.Compare(this.Name, other.Name) >= 0)
                 return 1;
             else return -1;
         }
