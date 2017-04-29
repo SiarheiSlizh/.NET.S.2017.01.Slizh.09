@@ -17,13 +17,13 @@ namespace Task1
         /// </summary>
         /// <param name="path">The whole path to file with name</param>
         /// <param name="listBooks">List of books</param>
-        void Write(string path, List<Book> listBooks);
+        void Write(string path, IEnumerable<Book> listBooks);
 
         /// <summary>
         /// Load information from file
         /// </summary>
         /// <param name="path">The whole path to file with name</param>
         /// <returns>List of books</returns>
-        IEnumerable<Book> Read(string path);
+        List<Book> Read(string path);
     }
 }

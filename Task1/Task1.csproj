@@ -44,15 +44,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdapteeRepositoryTxt.cs" />
+    <Compile Include="AdapteeRepository\TxtRepository.cs" />
+    <Compile Include="AdapteeRepository\XmlRepository.cs" />
+    <Compile Include="AdapteeRepository\BinarySerializer.cs" />
     <Compile Include="Book.cs" />
     <Compile Include="BookListService.cs" />
     <Compile Include="IFind.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="NlogAdapter.cs" />
-    <Compile Include="RepositoryAdapterTxt.cs" />
+    <Compile Include="RepositoryAdapters\AdapterSerializer.cs" />
+    <Compile Include="RepositoryAdapters\AdapterTxt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RepositoryAdapters\AdapterXML.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="NLog.config">

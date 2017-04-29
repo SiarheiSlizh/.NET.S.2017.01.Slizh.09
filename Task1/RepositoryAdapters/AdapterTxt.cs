@@ -8,36 +8,32 @@ using NLog;
 namespace Task1
 {
     /// <summary>
-    /// Adapter for class AdapteeRepositoryTxt
+    /// Adapter for class TxtRepository
     /// </summary>
-    public class RepositoryAdapterTxt : IRepository
+    public class AdapterTxt : IRepository
     {
         #region private fields
-
         /// <summary>
-        /// Adaptable class whic contains the functional
+        /// Adaptable class which contains the functional
         /// </summary>
-        private readonly AdapteeRepositoryTxt storage = new AdapteeRepositoryTxt();
-
+        private readonly TxtRepository storage = new TxtRepository();
         #endregion
 
 
         #region public methods
-
         /// <summary>
         /// Save information to file
         /// </summary>
         /// <param name="path">The whole path to file with name</param>
         /// <param name="listBooks">List of books</param>
-        void IRepository.Write(string path, List<Book> listBooks) => storage.SaveToFile(path, listBooks);
+        void IRepository.Write(string path, IEnumerable<Book> listBooks) => storage.SaveToFile(path, listBooks);
 
         /// <summary>
         /// Load information from file
         /// </summary>
         /// <param name="path">The whole path to file with name</param>
         /// <returns>List of books</returns>
-        IEnumerable<Book> IRepository.Read(string path) => storage.LoadFromFile(path);
-      
+        List<Book> IRepository.Read(string path) => storage.LoadFromFile(path);
         #endregion
     }
 }

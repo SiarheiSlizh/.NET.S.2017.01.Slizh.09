@@ -10,6 +10,7 @@ namespace Task1
     /// <summary>
     /// Contains information about books.
     /// </summary>
+    [Serializable]
     public class Book:IComparable, IComparable<Book>, IEquatable<Book>, IFormattable
     {
         #region Properties

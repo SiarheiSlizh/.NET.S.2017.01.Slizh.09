@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 namespace Task1
 {
     /// <summary>
-    /// Adaptable class.
+    /// Adaptable class which is used for loading/uploading list of books from/to txt file.
     /// </summary>
-    public class AdapteeRepositoryTxt
+    public class TxtRepository
     {
         #region public methods
-        
+
         /// <summary>
         /// Save books to binary file.
         /// </summary>
         /// <param name="path">The whole path to file with name.</param>
-        /// <param name="service">Container for books.</param>
-        public void SaveToFile(string path, List<Book> listBooks)
+        /// <param name="listBooks">Container for books.</param>
+        public void SaveToFile(string path, IEnumerable<Book> listBooks)
         {
             if (ReferenceEquals(listBooks, null))
                 throw new ArgumentNullException(nameof(listBooks));
@@ -27,7 +27,7 @@ namespace Task1
             if (!path.EndsWith(".txt"))
                 throw new FormatException(nameof(path));
 
-            if (listBooks.Count == 0)
+            if (listBooks.Count() == 0)
                 return;
 
             try {
@@ -60,8 +60,8 @@ namespace Task1
         /// Load books from binary file.
         /// </summary>
         /// <param name="path">The whole path to file with name.</param>
-        /// <param name="service">Container for books.</param>
-        public IEnumerable<Book> LoadFromFile(string path)
+        /// <returns>list of books</returns>
+        public List<Book> LoadFromFile(string path)
         {
             List<Book> listBooks = new List<Book>();
 

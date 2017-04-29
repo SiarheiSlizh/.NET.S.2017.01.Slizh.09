@@ -174,7 +174,7 @@ namespace Task1
         /// <param name="storage">type of storage</param>
         /// <param name="path">path to repository</param>
         /// <returns>list of books</returns>
-        public IEnumerable<Book> Download(IRepository storage, string path)
+        public List<Book> Download(IRepository storage, string path)
         {
             log.Debug("Try to download books");
             if (ReferenceEquals(storage, null))
@@ -189,9 +189,9 @@ namespace Task1
                 throw new ArgumentNullException(nameof(path));
             }
 
-            IEnumerable<Book> list = storage.Read(path);
+            listBooks = storage.Read(path);
             log.Debug($"Books are downloaded from storage {path}");
-            return list;
+            return listBooks;
         }
 
         #endregion
